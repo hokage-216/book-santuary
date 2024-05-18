@@ -1,0 +1,76 @@
+[
+    {
+        "username": "readerJane",
+        "email": "jane@example.com",
+        "password": "password123",
+        "savedBooks": [
+            {
+                "authors": ["J.K. Rowling"],
+                "description": "A young wizard and his friends experience year-round adventures at a magic school.",
+                "bookId": "1",
+                "image": "http://example.com/hp.jpg",
+                "link": "http://example.com/hp",
+                "title": "Harry Potter and the Sorcerer's Stone"
+            }
+        ]
+    },
+    {
+        "username": "bookwormBen",
+        "email": "ben@example.com",
+        "password": "12345secure",
+        "savedBooks": [
+            {
+                "authors": ["Herman Melville"],
+                "description": "A narrative of a ship captain's vengeful pursuit of a whale.",
+                "bookId": "2",
+                "image": "http://example.com/md.jpg",
+                "link": "http://example.com/md",
+                "title": "Moby Dick"
+            }
+        ]
+    },
+    {
+        "username": "literaryLiz",
+        "email": "liz@example.com",
+        "password": "myPassw0rd",
+        "savedBooks": []
+    },
+    {
+        "username": "fantasyFred",
+        "email": "fred@example.com",
+        "password": "fredsFantasy",
+        "savedBooks": [
+            {
+                "authors": ["J.R.R. Tolkien"],
+                "description": "A fantasy epic about the quest to destroy a powerful ring.",
+                "bookId": "3",
+                "image": "http://example.com/lotr.jpg",
+                "link": "http://example.com/lotr",
+                "title": "The Lord of the Rings"
+            },
+            {
+                "authors": ["George R.R. Martin"],
+                "description": "Noble families vie for control of the mythical land of Westeros.",
+                "bookId": "4",
+                "image": "http://example.com/got.jpg",
+                "link": "http://example.com/got",
+                "title": "Game of Thrones"
+            }
+        ]
+    },
+    {
+        "username": "mysteryMike",
+        "email": "mike@example.com",
+        "password": "mike12345",
+        "savedBooks": [
+            {
+                "authors": ["Agatha Christie"],
+                "description": "A detective solves mysteries using his ingenious mind.",
+                "bookId": "5",
+                "image": "http://example.com/ac.jpg",
+                "link": "http://example.com/ac",
+                "title": "Murder on the Orient Express"
+            }
+        ]
+    }
+]
