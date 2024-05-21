@@ -2,16 +2,38 @@ const express = require('express');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const path = require('path');
-const { authMiddleware } = require('./utils/auth');
+const jwt = require('jsonwebtoken');
 
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
+
+// JWT secret and expiration setup
+const secret = 'mysecretsshhhhh';
+const expiration = '2h';
+
+// Apollo Server setup with context for authentication
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req }) => {
+    let token = req.query.token || req.headers.authorization;
+    if (req.headers.authorization) {
+      token = token.split(' ').pop().trim();
+    }
+    if (token) {
+      try {
+        const { data } = jwt.verify(token, secret, { maxAge: expiration });
+        return { user: data };
+      } catch (error) {
+        console.error('Invalid token', error);
+        return {}; // Send empty context if token is invalid
+      }
+    }
+    return {}; // Send empty context if no token
+  },
 });
 
 // Create a new instance of an Apollo server with the GraphQL schema
@@ -21,13 +43,10 @@ const startApolloServer = async () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
-  app.use('/graphql', expressMiddleware(server, {
-    context: authMiddleware
-  }));
+  app.use('/graphql', expressMiddleware(server));
 
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/dist')));
-
     app.get('*', (req, res) => {
       res.sendFile(path.join(__dirname, '../client/dist/index.html'));
     });
