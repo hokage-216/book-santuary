@@ -24,12 +24,22 @@ export const LOGIN_USER = gql`
     }
 `;
 
-export const SAVE_BOOK = gql `
-    mutation saveBook($authors: [String], $description: String!, $bookId: String!, $image: String, $link: String, $title: String!) {
-        saveBook(authors: $authors, description: $description, bookId: $bookId, image: $image, link: $link, title: $title) {
-            bookId
-        }
+export const SAVE_BOOK = gql`
+  mutation saveBook($bookData: BookInput!) {
+    saveBook(bookData: $bookData) {
+      _id
+      username
+      email
+      savedBooks {
+        bookId
+        authors
+        image
+        description
+        title
+        link
+      }
     }
+  }
 `;
 
 export const REMOVE_BOOK = gql`

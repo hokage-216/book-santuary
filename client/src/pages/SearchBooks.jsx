@@ -76,24 +76,31 @@ const SearchBooks = () => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
+      console.error("No token found");
       return false;
     }
 
     try {
       const { data } = await saveBook({
-        variables: { bookData: bookToSave },
+        variables: { bookData: { ...bookToSave } }, // Make sure the structure matches BookInput type
+        context: {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        },
       });
 
       if (!data) {
-        throw new Error('something went wrong!');
+        throw new Error('Save book mutation returned no data');
       }
 
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
-      console.error(err);
+      console.error("Error saving book", err);
     }
   };
+
 
   return (
     <>
