@@ -3,6 +3,7 @@ const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const cors = require('cors'); // Import cors middleware
 
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
@@ -13,6 +14,12 @@ const app = express();
 // JWT secret and expiration setup
 const secret = 'mysecretsshhhhh';
 const expiration = '2h';
+
+// Enable CORS with options
+app.use(cors({
+  origin: 'http://localhost:3000', // Your frontend's URL
+  credentials: true,
+}));
 
 // Apollo Server setup with context for authentication
 const server = new ApolloServer({

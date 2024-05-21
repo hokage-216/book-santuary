@@ -9,8 +9,13 @@ import {
 } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
-// import { saveBook, searchGoogleBooks } from '../utils/API';
+import { useMutation , useLazyQuery } from '@apollo/client';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
+
+import { SEARCH_BOOKS } from '../utils/queries';
+import { SAVE_BOOK } from '../utils/mutations';
+
+
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -27,6 +32,25 @@ const SearchBooks = () => {
     return () => saveBookIds(savedBookIds);
   });
 
+  // Use Apollo Client's useLazyQuery hook for executing the search query
+  const [searchBooks, { loading, data }] = useLazyQuery(SEARCH_BOOKS);
+
+  // Use Apollo Client's useMutation hook for saving a book
+  const [saveBook] = useMutation(SAVE_BOOK);
+
+  useEffect(() => {
+    if (data) {
+      const bookData = data.searchBooks.map((book) => ({
+        bookId: book.bookId,
+        authors: book.authors || ['No author to display'],
+        title: book.title,
+        description: book.description,
+        image: book.image || '',
+      }));
+      setSearchedBooks(bookData);
+    }
+  }, [data]);
+
   // create method to search for books and set state on form submit
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -36,23 +60,7 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await searchGoogleBooks(searchInput);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const { items } = await response.json();
-
-      const bookData = items.map((book) => ({
-        bookId: book.id,
-        authors: book.volumeInfo.authors || ['No author to display'],
-        title: book.volumeInfo.title,
-        description: book.volumeInfo.description,
-        image: book.volumeInfo.imageLinks?.thumbnail || '',
-      }));
-
-      setSearchedBooks(bookData);
+      searchBooks({ variables: { query: searchInput } });
       setSearchInput('');
     } catch (err) {
       console.error(err);
@@ -72,9 +80,11 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await saveBook(bookToSave, token);
+      const { data } = await saveBook({
+        variables: { bookData: bookToSave },
+      });
 
-      if (!response.ok) {
+      if (!data) {
         throw new Error('something went wrong!');
       }
 
