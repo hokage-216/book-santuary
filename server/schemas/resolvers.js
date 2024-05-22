@@ -50,6 +50,7 @@ const resolvers = {
 
     saveBook: async (parent, { authors, description, bookId, image, link, title }, context) => {
       if (context.user) {
+        console.log(context.user);
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
           {
@@ -59,6 +60,7 @@ const resolvers = {
           },
           { new: true }
         );
+        console.log(updatedUser);
         return updatedUser;
       }
       throw new Error('You need to be logged in to save a book.');
