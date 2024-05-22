@@ -17,7 +17,7 @@ const expiration = '2h';
 
 // Enable CORS with options
 app.use(cors({
-  origin: 'http://localhost:3000', // Your frontend's URL
+  origin: 'http://localhost:3000',
   credentials: true,
 }));
 
