@@ -1,5 +1,4 @@
 const { User } = require('../models');
-const {GraphQLError} = require('graphql');
 const {signToken} = require('../utils/auth');
 const axios = require('axios');
 
@@ -9,11 +8,7 @@ const resolvers = {
       if (context.user) {
         return User.findById(context.user._id);
       }
-      throw new GraphQLError('You must be logged in to perform this action.', {
-        extensions: {
-          code: 'UNAUTHENTICATED',
-        },
-      });
+      throw new Error('You must be logged in to perform this action.');
     },
     searchBooks: async (parent, { query }, context) => {
         try {
@@ -31,11 +26,7 @@ const resolvers = {
           return [];
         } catch (error) {
           console.error("Failed to fetch books:", error);
-          throw new GraphQLError('Failed to fetch books.', {
-            extensions: {
-              code: 'QUERYERROR',
-            },
-          });
+          throw new Error('Failed to fetch books.');
         }
       }
   },
@@ -50,11 +41,7 @@ const resolvers = {
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
       if (!user || !user.isCorrectPassword(password)) {
-        throw new GraphQLError('No user found with this email address.', {
-          extensions: {
-            code: 'UNAUTHENTICATED',
-          },
-        });
+        throw new Error('No user found with this email address.');
       }
 
       const token = signToken(user);
@@ -74,11 +61,7 @@ const resolvers = {
         );
         return updatedUser;
       }
-      throw new GraphQLError('You need to be logged in to save a book.', {
-        extensions: {
-          code: 'UNAUTHENTICATED',
-        },
-      });
+      throw new Error('You need to be logged in to save a book.');
     },
     removeBook: async (parent, { bookId }, context) => {
       if (context.user) {
@@ -93,11 +76,7 @@ const resolvers = {
         );
         return updatedUser;
       }
-      throw new GraphQLError('You need to be logged in to remove a book.', {
-        extensions: {
-          code: 'UNAUTHENTICATED',
-        },
-      });
+      throw new Error('You need to be logged in to remove a book.');
     },
   },
 }
