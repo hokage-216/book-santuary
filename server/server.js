@@ -26,18 +26,18 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
-    console.log("Headers:", req.headers);
+    console.log("Headers: ", req.headers);
 
     const token = req.headers.authorization?.split(' ')[1];
-    console.log("Token from headers:", token);
+    console.log("Token from headers: ", token);
 
     if (token) {
       try {
         const { data } = jwt.verify(token, secret, { maxAge: expiration });
-        console.log("Decoded token data:", data);
+        console.log("Decoded token data: ", data);
         return { user: data };
       } catch (error) {
-        console.error('Invalid token', error);
+        console.error('Invalid token: ', error);
         return {}; // Send empty context if token is invalid
       }
     }
